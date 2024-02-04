@@ -1,3 +1,5 @@
+Fork of Killercrush's [Music-tempo](https://killercrush.github.io/music-tempo) wit Typescript support
+
 ## Description
 
 Typescript library for finding out tempo (BPM) of a song and beat tracking. It uses an algorithm ["Beatroot"](http://www.eecs.qmul.ac.uk/~simond/pub/2001/jnmr.pdf) authored by [Simon Dixon](http://www.eecs.qmul.ac.uk/~simond/)
@@ -11,13 +13,7 @@ Typescript library for finding out tempo (BPM) of a song and beat tracking. It u
 Using npm:
 
 ```sh
-npm i music-tempo
-```
-
-In a browser
-
-```html
-<script src="music-tempo.min.js"></script>
+npm i @superiortech/music-tempo
 ```
 
 ## Usage

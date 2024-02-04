@@ -19,7 +19,7 @@
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   
-  <a data-ice="repoURL" href="https://github.com/killercrush/music-tempo" class="repo-url-github">Repository</a>
+  <a data-ice="repoURL" href="https://github.com/jdmg94/music-tempo" class="repo-url-github">Repository</a>
   <div class="search-box">
   <span>
     <img src="./image/search.png">
@@ -36,47 +36,45 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h2 id="description">Description</h2>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><p>Fork of Killercrush&apos;s <a href="https://killercrush.github.io/music-tempo">Music-tempo</a> wit Typescript support</p>
+<h2 id="description">Description</h2>
 <p>Typescript library for finding out tempo (BPM) of a song and beat tracking. It uses an algorithm <a href="http://www.eecs.qmul.ac.uk/~simond/pub/2001/jnmr.pdf">&quot;Beatroot&quot;</a> authored by <a href="http://www.eecs.qmul.ac.uk/~simond/">Simon Dixon</a></p>
 <p><strong><a href="https://killercrush.github.io/music-tempo/example/example-advanced.html">Example App</a></strong></p>
 <p><strong><a href="https://killercrush.github.io/music-tempo/docs/index.html">Docs</a></strong></p>
 <h2 id="instalation">Instalation</h2>
 <p>Using npm:</p>
-<pre><code class="lang-sh"><code class="source-code prettyprint">npm i music-tempo</code>
-</code></pre>
-<p>In a browser</p>
-<pre><code class="lang-html"><code class="source-code prettyprint">&lt;script src=&quot;music-tempo.min.js&quot;&gt;&lt;/script&gt;</code>
+<pre><code class="lang-sh"><code class="source-code prettyprint">npm i @superiortech/music-tempo</code>
 </code></pre>
 <h2 id="usage">Usage</h2>
 <p>Pass to the constructor MusicTempo the buffer that contains data in the following format: non-interleaved IEEE754 32-bit linear PCM with a nominal range between -1 and +1, that is, 32bits floating point buffer, with each samples between -1.0 and 1.0. This format is used in the <a href="https://developer.mozilla.org/en/docs/Web/API/AudioBuffer">AudioBuffer</a> interface of <a href="https://developer.mozilla.org/en/docs/Web/API/Web_Audio_API">Web Audio API</a>. The object returned by the constructor contain properties <code>tempo</code> - tempo value in beats per minute and <code>beats</code> - array with beat times in seconds.</p>
 <h3 id="react-js">React.js</h3>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">import { useRef, useEffect } from &quot;react&quot;;
+<pre><code class="lang-javascript"><code class="source-code prettyprint">import { useState, useRef, useEffect } from &quot;react&quot;;
 import { extractTempo } from &quot;music-tempo&quot;;
 
 const context = new AudioContext({ sampleRate: 44100 });
-const calcTempo = function (buffer) {
-  let audioData = [];
-  // Take the average of the two channels
-  if (buffer.numberOfChannels == 2) {
-    const channel1Data = buffer.getChannelData(0);
-    const channel2Data = buffer.getChannelData(1);
-    const length = channel1Data.length;
-    for (let i = 0; i &lt; length; i++) {
-      audioData[i] = (channel1Data[i] + channel2Data[i]) / 2;
-    }
-  } else {
-    audioData = buffer.getChannelData(0);
-  }
-  const mt = extractTempo(audioData);
-
-  console.log(mt.tempo);
-  console.log(mt.beats);
-};
-
 const GetBPM = () =&gt; {
   const ref = useRef(null);
+  const [result, setResult] = useState(null);
 
   useEffect(() =&gt; {
+    const calcTempo = function (buffer) {
+      let audioData = [];
+      // Take the average of the two channels
+      if (buffer.numberOfChannels == 2) {
+        const channel1Data = buffer.getChannelData(0);
+        const channel2Data = buffer.getChannelData(1);
+        const length = channel1Data.length;
+        for (let i = 0; i &lt; length; i++) {
+          audioData[i] = (channel1Data[i] + channel2Data[i]) / 2;
+        }
+      } else {
+        audioData = buffer.getChannelData(0);
+      }
+      const musicTempo = extractTempo(audioData);
+
+      setResult(musicTempo);
+    };
+
     ref.current.onchange = function () {
       const files = ref.current.files;
 
